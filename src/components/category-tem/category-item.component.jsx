@@ -1,4 +1,5 @@
 import './category-item.styles.scss';
+
 const CategoryItem = ({ category: { title, imageUrl } }) => {
     return (
         <div className='category-container'>
