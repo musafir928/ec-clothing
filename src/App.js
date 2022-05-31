@@ -1,36 +1,19 @@
-import Categories from './components/categories/Categories.component';
+import { Routes, Route } from 'react-router-dom';
+import Home from './components/routes/home/Home';
+import Navigation from './components/routes/Navigation/Navigation.component';
+import SignIn from './components/routes/sign-in/sign-in.component';
 
 const App = () => {
-    const categories = [
-        {
-            id: 1,
-            title: 'hats',
-            imageUrl: 'https://i.ibb.co/cvpntL1/hats.png'
-        },
-        {
-            id: 2,
-            title: 'jackets',
-            imageUrl: 'https://i.ibb.co/px2tCc3/jackets.png'
-        },
-        {
-            id: 3,
-            title: 'sneakers',
-            imageUrl: 'https://i.ibb.co/0jqHpnp/sneakers.png'
-        },
-        {
-            id: 4,
-            title: 'flowers',
-            imageUrl:
-                'https://purepng.com/public/uploads/large/purepng.com-bouquet-of-flowersbouquetflowersbasket-of-flowersclusterbunch-1701527697365kgp55.png'
-        },
-        {
-            id: 5,
-            title: 'mens',
-            imageUrl: 'https://i.ibb.co/R70vBrQ/men.png'
-        }
-    ];
-
-    return <Categories categories={categories} />;
+    const Shop = () => <div className=''>I'm the shop</div>;
+    return (
+        <Routes>
+            <Route path='/' element={<Navigation />}>
+                <Route index element={<Home />} />
+                <Route path='shop' element={<Shop />} />
+                <Route path='sign-in' element={<SignIn />} />
+            </Route>
+        </Routes>
+    );
 };
 
 export default App;
