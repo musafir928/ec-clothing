@@ -36,7 +36,8 @@ export const CartContext = createContext({
     addItemToCart: () => {},
     cartCount: 0,
     clearItemFromCart: () => {},
-    cartTotal: 0
+    cartTotal: 0,
+    removeItemFromCart: () => {}
 });
 
 export const CartProvider = ({ children }) => {
