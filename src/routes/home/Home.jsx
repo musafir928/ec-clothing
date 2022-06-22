@@ -1,4 +1,6 @@
-import Categories from '../../components/categories/Categories.component';
+import { Outlet } from 'react-router-dom';
+
+import Directory from '../../components/directory/directory.component';
 
 const Home = () => {
     const categories = [
@@ -19,9 +21,8 @@ const Home = () => {
         },
         {
             id: 4,
-            title: 'flowers',
-            imageUrl:
-                'https://purepng.com/public/uploads/large/purepng.com-bouquet-of-flowersbouquetflowersbasket-of-flowersclusterbunch-1701527697365kgp55.png'
+            title: 'womens',
+            imageUrl: 'https://i.ibb.co/GCCdy8t/womens.png'
         },
         {
             id: 5,
@@ -30,7 +31,12 @@ const Home = () => {
         }
     ];
 
-    return <Categories categories={categories} />;
+    return (
+        <div>
+            <Directory categories={categories} />
+            <Outlet />
+        </div>
+    );
 };
 
 export default Home;
