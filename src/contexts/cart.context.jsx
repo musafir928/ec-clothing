@@ -1,4 +1,12 @@
-import { createContext, useState, useEffect } from 'react';
+import { type } from '@testing-library/user-event/dist/type';
+import { createContext, useReducer } from 'react';
+
+const INITIAL_STATE = {
+    isCartOpen: false,
+    cartItems: [],
+    cartCount: 0,
+    cartTotal: 0
+};
 
 export const addCartItem = (cartItems, productToAdd) => {
     const existingCartItem = cartItems.find((cartItem) => cartItem.id === productToAdd.id);
@@ -40,27 +48,64 @@ export const CartContext = createContext({
     removeItemFromCart: () => {}
 });
 
+// the best practice in reducer is: not include the business logic inside reducer switch
+const cartReducer = (state, action) => {
+    const { type, payload } = action;
+
+    switch (type) {
+        case 'SET_CART_ITEM':
+            return {
+                ...state,
+                ...payload
+            };
+        case 'TOGGLE_IS_CART_OPEN':
+            return {
+                ...state,
+                ...payload
+            };
+        default:
+            throw new Error(`Unhandled type of ${type} in cart reducer`);
+    }
+};
+
 export const CartProvider = ({ children }) => {
-    const [isCartOpen, setIsCartOpen] = useState(false);
-    const [cartItems, setCartItems] = useState([]);
-    const [cartCount, setCartCount] = useState(0);
-    const [cartTotal, setCartTotal] = useState(0);
+    const [{ cartCount, cartItems, isCartOpen, cartTotal }, dispatch] = useReducer(
+        cartReducer,
+        INITIAL_STATE
+    );
 
-    useEffect(() => {
-        setCartCount(cartItems.reduce((s, cartItem) => s + cartItem.quantity, 0));
-    }, [cartItems]);
+    const updateCartItemsReducer = (newCartItems) => {
+        const newCartCount = newCartItems.reduce((s, cartItem) => s + cartItem.quantity, 0);
+        const newCartTotal = newCartItems.reduce(
+            (s, cartItem) => s + cartItem.quantity * cartItem.price,
+            0
+        );
 
-    useEffect(() => {
-        setCartTotal(cartItems.reduce((s, cartItem) => s + cartItem.quantity * cartItem.price, 0));
-    }, [cartItems]);
+        dispatch({
+            type: 'SET_CART_ITEMS',
+            payload: { cartItems: newCartItems, cartTotal: newCartTotal, cartCount: newCartCount }
+        });
+    };
 
-    const addItemToCart = (productToAdd) => setCartItems(addCartItem(cartItems, productToAdd));
+    const addItemToCart = (productToAdd) => {
+        const newCartItems = addCartItem(cartItems, productToAdd);
+        updateCartItemsReducer(newCartItems);
+    };
 
-    const removeItemFromCart = (cartItemToRemove) =>
-        setCartItems(removeCartItem(cartItems, cartItemToRemove));
+    const removeItemFromCart = (cartItemToRemove) => {
+        const newCartItems = removeCartItem(cartItems, cartItemToRemove);
+        updateCartItemsReducer(newCartItems);
+    };
 
-    const clearItemFromCart = (cartItemToClear) =>
-        setCartItems(clearCartItem(cartItems, cartItemToClear));
+    const clearItemFromCart = (cartItemToClear) => {
+        const newCartItems = clearCartItem(cartItems, cartItemToClear);
+        updateCartItemsReducer(newCartItems);
+    };
+
+    const setIsCartOpen = () => {
+        const newIsCartOpen = !isCartOpen;
+        dispatch({ type: 'TOGGLE_IS_CART_OPEN', payload: { isCartOpen: newIsCartOpen } });
+    };
 
     const value = {
         isCartOpen,
