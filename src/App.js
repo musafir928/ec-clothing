@@ -1,16 +1,21 @@
+// react, router
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
+
+// redux
+import { useDispatch } from 'react-redux';
+import { setCurrentUser } from './store/user/user.action';
 import {
     onAuthStateChangedListener,
     createUserDocumentFromAuth
 } from './utils/firebase/firebase.utils';
+
+// components
 import Home from './routes/home/Home';
 import Navigation from './routes/Navigation/Navigation.component';
 import Authentication from './routes/authentication/Authentication.component';
 import Checkout from './routes/checkout/checkout.component';
 import Shop from './routes/shop/shop.component';
-import { setCurrentUser } from './store/user/user.action';
 
 const App = () => {
     const dispatch = useDispatch();
