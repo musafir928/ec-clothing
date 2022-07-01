@@ -2,13 +2,8 @@
 import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-// redux
-import { useDispatch } from 'react-redux';
-import { setCurrentUser } from './store/user/user.action';
-import {
-    onAuthStateChangedListener,
-    createUserDocumentFromAuth
-} from './utils/firebase/firebase.utils';
+//sagas
+import { checkUserSession } from './store/user/user.action';
 
 // components
 import Home from './routes/home/Home';
@@ -16,17 +11,12 @@ import Navigation from './routes/Navigation/Navigation.component';
 import Authentication from './routes/authentication/Authentication.component';
 import Checkout from './routes/checkout/checkout.component';
 import Shop from './routes/shop/shop.component';
+import { useDispatch } from 'react-redux';
 
 const App = () => {
     const dispatch = useDispatch();
     useEffect(() => {
-        const unsubscribe = onAuthStateChangedListener(async (user) => {
-            if (user) {
-                await createUserDocumentFromAuth(user);
-            }
-            dispatch(setCurrentUser(user));
-        });
-        return unsubscribe;
+        dispatch(checkUserSession());
     }, []);
 
     return (
